@@ -75,12 +75,12 @@
     --background: 222 47% 6%;
     --foreground: 180 100% 95%;
   }
-
- * {
-  border-color: hsl(var(--border));
 }
 
-
+@layer base {
+  * {
+    @apply border-border;
+  }
 
   html {
     scroll-behavior: smooth;
