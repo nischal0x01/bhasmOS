@@ -109,3 +109,4 @@ export function GanttChart({ blocks, className }: GanttChartProps) {
     </TooltipProvider>
   );
 }
+// --- IGNORE ---
