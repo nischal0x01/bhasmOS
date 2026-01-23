@@ -96,7 +96,7 @@ export function CPUScheduler() {
     setResult(null);
     toast.success(`Process ${newProcess.id} added`);
   };
-  {};
+
   const removeProcess = (id: string) => {
     setProcesses(processes.filter(p => p.id !== id));
     setResult(null);
