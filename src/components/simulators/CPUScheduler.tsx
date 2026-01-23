@@ -136,7 +136,7 @@ export function CPUScheduler() {
     setResult(simulationResult);
     toast.success('Simulation completed!');
   };
-
+//reset function
   const resetAll = () => {
     setProcesses([]);
     setResult(null);
@@ -464,4 +464,4 @@ export function CPUScheduler() {
     </div>
   );
 }
-// end of simulation
+
