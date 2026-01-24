@@ -10,6 +10,8 @@ import { runDiskScheduling } from '@/lib/disk-scheduling';
 import { Play, RotateCcw } from 'lucide-react';
 import { StatCard } from '@/components/StatCard';
 import { CardDescription } from '@/components/ui/card';
+import { ArrowRight } from 'lucide-react';
+
 
 import {
   Select,
@@ -259,6 +261,40 @@ export function DiskScheduler() {
           </div>
         </CardContent>
       </Card>
+      {result && (
+        <Card variant="terminal">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-lg">Seek Sequence</CardTitle>
+            <CardDescription>Order of cylinder access with seek times</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-wrap items-center gap-2">
+              {result.sequence.map((cylinder, index) => (
+                <div key={index} className="flex items-center gap-2">
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: index * 0.05 }}
+                    className="px-3 py-2 rounded-lg font-mono font-medium border bg-primary/20 text-primary border-primary/30"
+                  >
+                    {cylinder}
+                  </motion.div>
+                  {index < result.sequence.length - 1 && (
+                    <div className="flex items-center text-muted-foreground">
+                      <ArrowRight className="w-4 h-4" />
+                      {result.seekOperations[index] && (
+                        <span className="text-xs font-mono ml-1">
+                          +{result.seekOperations[index].seek}
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }
