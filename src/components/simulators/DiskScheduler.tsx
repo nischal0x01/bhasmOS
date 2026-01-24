@@ -295,6 +295,35 @@ export function DiskScheduler() {
           </CardContent>
         </Card>
       )}
+
+      {result && (
+        <Card variant="terminal">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-lg">Seek Operations</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2 max-h-[300px] overflow-y-auto">
+              {result.seekOperations.map((op, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.03 }}
+                  className="flex items-center justify-between p-3 rounded-lg border bg-muted/30 border-border"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs text-muted-foreground w-8">#{index + 1}</span>
+                    <span className="font-mono">{op.from}</span>
+                    <ArrowRight className="w-4 h-4 text-muted-foreground" />
+                    <span className="font-mono font-medium text-primary">{op.to}</span>
+                  </div>
+                  <span className="font-mono text-accent">+{op.seek} cylinders</span>
+                </motion.div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }
