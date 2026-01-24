@@ -5,6 +5,10 @@ import { Plus, Play, RotateCcw, Trash2, ArrowRight, ArrowLeft, Pause } from 'luc
 import { DiskRequest, DiskAlgorithm } from '@/types/os-types';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { DiskSchedulingResult } from '@/types/os-types';
+import { runDiskScheduling } from '@/lib/disk-scheduling';
+import { Play, RotateCcw } from 'lucide-react';
+
 import {
   Select,
   SelectContent,
@@ -55,15 +59,44 @@ const removeRequest = (id: number) => {
   setRequests(requests.filter(r => r.id !== id));
   setResult(null);
 };
+const runSimulation = () => {
+  if (requests.length === 0) {
+    toast.error('Add at least one request');
+    return;
+  }
+
+  const simulationResult = runDiskScheduling(
+    requests,
+    headPosition,
+    algorithm,
+    maxCylinder,
+    direction
+  );
+  setResult(simulationResult);
+  toast.success('Simulation completed!');
+};
+
+const resetAll = () => {
+  setRequests([]);
+  setResult(null);
+  setNewCylinder('');
+  toast.info('Simulation reset');
+};
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold">Disk Scheduling Simulator</h2>
-        <p className="text-muted-foreground">
-          Visualize disk head movement and seek time optimization
-        </p>
-      </div>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+  <div>
+    <h2 className="text-2xl font-bold text-foreground">Disk Scheduling Simulator</h2>
+    <p className="text-muted-foreground">
+      Visualize disk head movement and seek time optimization
+    </p>
+  </div>
+  <Button variant="outline" onClick={resetAll}>
+    <RotateCcw className="w-4 h-4 mr-2" />
+    Reset
+  </Button>
+</div>
       <Card variant="terminal">
   <CardHeader className="pb-4">
     <CardTitle className="text-lg">Configuration</CardTitle>
@@ -153,6 +186,10 @@ const removeRequest = (id: number) => {
     </div>
   </CardContent>
 </Card>
+<Button onClick={runSimulation} className="flex-1" disabled={requests.length === 0}>
+  <Play className="w-4 h-4" />
+  Run
+</Button>
     </div>
   );
 }
