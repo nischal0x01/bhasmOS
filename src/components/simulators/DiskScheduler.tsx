@@ -11,7 +11,9 @@ import { Play, RotateCcw } from 'lucide-react';
 import { StatCard } from '@/components/StatCard';
 import { CardDescription } from '@/components/ui/card';
 import { ArrowRight } from 'lucide-react';
-
+import { useEffect, useRef } from 'react';
+import { Pause, ArrowLeft } from 'lucide-react';
+import { AnimatePresence } from 'framer-motion';
 
 import {
   Select,
@@ -40,6 +42,11 @@ export function DiskScheduler() {
   const [direction, setDirection] = useState<'left' | 'right'>('right');
   const [newCylinder, setNewCylinder] = useState('');
   const [result, setResult] = useState<DiskSchedulingResult | null>(null);
+
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [currentStep, setCurrentStep] = useState(-1);
+  const animationRef = useRef<NodeJS.Timeout | null>(null);
+
   const showDirection = algorithm === 'scan' || algorithm === 'look';
 
   const addRequest = () => {
@@ -80,12 +87,50 @@ export function DiskScheduler() {
     toast.success('Simulation completed!');
   };
 
+  const startAnimation = () => {
+    if (!result) {
+      runSimulation();
+      return;
+    }
+    setIsAnimating(true);
+    setCurrentStep(0);
+  };
+
+  const stopAnimation = () => {
+    setIsAnimating(false);
+    if (animationRef.current) {
+      clearTimeout(animationRef.current);
+    }
+  };
+
+  // Add animation effect
+  useEffect(() => {
+    if (isAnimating && result && currentStep < result.seekOperations.length) {
+      animationRef.current = setTimeout(() => {
+        setCurrentStep(prev => prev + 1);
+      }, 800);
+    } else if (currentStep >= (result?.seekOperations.length || 0)) {
+      setIsAnimating(false);
+    }
+
+    return () => {
+      if (animationRef.current) {
+        clearTimeout(animationRef.current);
+      }
+    };
+  }, [isAnimating, currentStep, result]);
   const resetAll = () => {
     setRequests([]);
     setResult(null);
     setNewCylinder('');
     toast.info('Simulation reset');
   };
+
+  const currentHeadPosition = result && currentStep >= 0 && currentStep < result.seekOperations.length
+    ? result.seekOperations[currentStep].to
+    : result && currentStep >= result.seekOperations.length
+      ? result.sequence[result.sequence.length - 1]
+      : headPosition;
 
   return (
     <div className="space-y-6">
@@ -144,6 +189,49 @@ export function DiskScheduler() {
               />
             </div>
           </div>
+          // Add animation button and update seek sequence/operations highlighting
+          {result && (
+            <Button
+              onClick={isAnimating ? stopAnimation : startAnimation}
+              variant={isAnimating ? 'destructive' : 'accent'}
+            >
+              {isAnimating ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+            </Button>
+          )}
+
+// Update direction conditional rendering
+          <AnimatePresence>
+            {showDirection && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="space-y-2"
+              >
+                <Label className="text-xs text-muted-foreground">Initial Direction</Label>
+                <div className="flex gap-2">
+                  <Button
+                    variant={direction === 'left' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => { setDirection('left'); setResult(null); }}
+                    className="flex-1"
+                  >
+                    <ArrowLeft className="w-4 h-4 mr-1" />
+                    Left
+                  </Button>
+                  <Button
+                    variant={direction === 'right' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => { setDirection('right'); setResult(null); }}
+                    className="flex-1"
+                  >
+                    Right
+                    <ArrowRight className="w-4 h-4 ml-1" />
+                  </Button>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </CardContent>
       </Card>
       <Card variant="terminal">
@@ -241,7 +329,11 @@ export function DiskScheduler() {
                 style={{ left: `${(request.cylinder / maxCylinder) * 100}%` }}
               />
             ))}
-
+            <motion.div
+              className="absolute top-2 w-4 h-8 rounded bg-primary shadow-glow transform -translate-x-1/2"
+              animate={{ left: `${(currentHeadPosition / maxCylinder) * 100}%` }}
+              transition={{ type: 'spring', stiffness: 100, damping: 15 }}
+            />
             {/* Head position */}
             <div
               className="absolute top-2 w-4 h-8 rounded bg-primary shadow-glow transform -translate-x-1/2"
@@ -270,26 +362,28 @@ export function DiskScheduler() {
           <CardContent>
             <div className="flex flex-wrap items-center gap-2">
               {result.sequence.map((cylinder, index) => (
-                <div key={index} className="flex items-center gap-2">
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ delay: index * 0.05 }}
-                    className="px-3 py-2 rounded-lg font-mono font-medium border bg-primary/20 text-primary border-primary/30"
-                  >
-                    {cylinder}
-                  </motion.div>
-                  {index < result.sequence.length - 1 && (
-                    <div className="flex items-center text-muted-foreground">
-                      <ArrowRight className="w-4 h-4" />
-                      {result.seekOperations[index] && (
-                        <span className="text-xs font-mono ml-1">
-                          +{result.seekOperations[index].seek}
-                        </span>
-                      )}
-                    </div>
-                  )}
-                </div>
+                const isActive = index <= currentStep + 1;
+              const isCurrent = index === currentStep + 1;
+              <div key={index} className="flex items-center gap-2">
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: index * 0.05 }}
+                  className="px-3 py-2 rounded-lg font-mono font-medium border bg-primary/20 text-primary border-primary/30"
+                >
+                  {cylinder}
+                </motion.div>
+                {index < result.sequence.length - 1 && (
+                  <div className="flex items-center text-muted-foreground">
+                    <ArrowRight className="w-4 h-4" />
+                    {result.seekOperations[index] && (
+                      <span className="text-xs font-mono ml-1">
+                        +{result.seekOperations[index].seek}
+                      </span>
+                    )}
+                  </div>
+                )}
+              </div>
               ))}
             </div>
           </CardContent>
