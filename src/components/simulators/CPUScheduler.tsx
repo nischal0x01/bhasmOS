@@ -136,7 +136,7 @@ export function CPUScheduler() {
     setResult(simulationResult);
     toast.success('Simulation completed!');
   };
-//reset function
+  //reset function
   const resetAll = () => {
     setProcesses([]);
     setResult(null);
@@ -220,7 +220,10 @@ export function CPUScheduler() {
                     <Input
                       type="number"
                       value={timeQuantum}
-                      onChange={(e) => setTimeQuantum(parseInt(e.target.value) || 1)}
+                      onChange={(e) => {
+                        const val = parseInt(e.target.value);
+                        setTimeQuantum(val > 0 ? val : 1);
+                      }}
                       min={1}
                       variant="terminal"
                     />
