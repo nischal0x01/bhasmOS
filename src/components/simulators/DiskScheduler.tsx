@@ -34,7 +34,7 @@ export function DiskScheduler() {
   const [direction, setDirection] = useState<'left' | 'right'>('right');
   const [result, setResult] = useState<DiskSchedulingResult | null>(null);
   const [newCylinder, setNewCylinder] = useState('');
-  
+
   // Animation state
   const [isAnimating, setIsAnimating] = useState(false);
   const [currentStep, setCurrentStep] = useState(-1);
@@ -49,8 +49,9 @@ export function DiskScheduler() {
       return;
     }
 
+    const maxId = requests.length > 0 ? Math.max(...requests.map(r => r.id)) : 0;
     const newRequest: DiskRequest = {
-      id: requests.length + 1,
+      id: maxId + 1,
       cylinder,
     };
     setRequests([...requests, newRequest]);
@@ -127,8 +128,8 @@ export function DiskScheduler() {
   const currentHeadPosition = result && currentStep >= 0 && currentStep < result.seekOperations.length
     ? result.seekOperations[currentStep].to
     : result && currentStep >= result.seekOperations.length
-    ? result.sequence[result.sequence.length - 1]
-    : headPosition;
+      ? result.sequence[result.sequence.length - 1]
+      : headPosition;
 
   return (
     <div className="space-y-6">
@@ -381,7 +382,7 @@ export function DiskScheduler() {
                   {result.sequence.map((cylinder, index) => {
                     const isActive = index <= currentStep + 1;
                     const isCurrent = index === currentStep + 1;
-                    
+
                     return (
                       <div key={index} className="flex items-center gap-2">
                         <motion.div
@@ -392,7 +393,7 @@ export function DiskScheduler() {
                             px-3 py-2 rounded-lg font-mono font-medium border transition-all
                             ${isCurrent ? 'bg-primary text-primary-foreground border-primary shadow-glow scale-110' :
                               isActive ? 'bg-primary/20 text-primary border-primary/30' :
-                              'bg-muted text-muted-foreground border-border'}
+                                'bg-muted text-muted-foreground border-border'}
                           `}
                         >
                           {cylinder}
