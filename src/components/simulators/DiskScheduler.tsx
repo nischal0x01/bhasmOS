@@ -307,7 +307,7 @@ export function DiskScheduler() {
               />
               <StatCard
                 label="Avg Seek Time"
-                value={(result.totalSeekTime / result.seekOperations.length).toFixed(2)}
+                value={result.seekOperations.length > 0 ? (result.totalSeekTime / result.seekOperations.length).toFixed(2) : '0'}
                 unit="cylinders"
                 variant="accent"
               />
