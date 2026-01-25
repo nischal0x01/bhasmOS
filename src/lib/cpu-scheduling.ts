@@ -425,9 +425,9 @@ function calculateAverages(results: Process[], ganttChart: GanttBlock[]): Schedu
   return {
     ganttChart,
     processes: results,
-    averageWaitingTime: results.reduce((sum, p) => sum + (p.waitingTime || 0), 0) / n,
-    averageTurnaroundTime: results.reduce((sum, p) => sum + (p.turnaroundTime || 0), 0) / n,
-    averageResponseTime: results.reduce((sum, p) => sum + (p.responseTime || 0), 0) / n,
+    averageWaitingTime: n > 0 ? results.reduce((sum, p) => sum + (p.waitingTime || 0), 0) / n : 0,
+    averageTurnaroundTime: n > 0 ? results.reduce((sum, p) => sum + (p.turnaroundTime || 0), 0) / n : 0,
+    averageResponseTime: n > 0 ? results.reduce((sum, p) => sum + (p.responseTime || 0), 0) / n : 0,
     cpuUtilization: totalTime > 0 ? ((totalTime - idleTime) / totalTime) * 100 : 0,
   };
 }
