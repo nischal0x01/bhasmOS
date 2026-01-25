@@ -1,73 +1,97 @@
-# Welcome to your Lovable project
+# BhasmOS - Operating System Simulator
 
-## Project info
+An interactive web-based operating system simulator for learning and visualizing core OS concepts including CPU scheduling, memory management, file systems, and disk I/O scheduling.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+![React](https://img.shields.io/badge/React-18.3-61DAFB?style=flat-square&logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6?style=flat-square&logo=typescript)
 
-## How can I edit this code?
+## � Developers
 
-There are several ways of editing your application.
+Developed by fifth semester students of **Kathmandu University**:
 
-**Use Lovable**
+- **Aayush Dahal** (16)
+- **Parichit Giri** (23)
+- **Aryan Koju** (31)
+- **Nischal Subedi** (53)
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+## 🚀 Features
 
-Changes made via Lovable will be committed automatically to this repo.
+### 💻 CPU Scheduling Simulator
+- **FCFS** (First Come First Serve)
+- **SJF** (Shortest Job First - Preemptive & Non-Preemptive)
+- **Priority Scheduling** (Preemptive & Non-Preemptive)
+- **Round Robin** (with configurable time quantum)
+- Real-time Gantt chart visualization
+- Performance metrics (Average Waiting Time, Turnaround Time, Response Time, CPU Utilization)
 
-**Use your preferred IDE**
+### 🧠 Memory Management Simulator
+- **First Fit**, **Best Fit**, **Worst Fit** allocation
+- Visual memory block representation
+- Fragmentation analysis (Internal & External)
+- Dynamic memory allocation/deallocation
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### 📁 File System Simulator
+- File and folder creation/management
+- Multiple file types support (text, binary, image, folder)
+- Hierarchical directory structure
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### 💾 Disk I/O Scheduling Simulator
+- **FCFS**, **SSTF**, **SCAN**, **LOOK** algorithms
+- Interactive disk track visualization
+- Real-time head movement animation
+- Seek time optimization metrics
 
-Follow these steps:
+## 🛠️ Tech Stack
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+- React 18.3 with TypeScript
+- Vite
+- Tailwind CSS
+- shadcn/ui components
+- Framer Motion
+- Lucide React icons
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+## 📦 Installation
 
-# Step 3: Install the necessary dependencies.
-npm i
+```bash
+# Clone the repository
+git clone <repository-url>
+cd bhasmOS
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+# Install dependencies
+pnpm install
+
+# Start development server
+pnpm run dev
 ```
 
-**Edit a file directly in GitHub**
+Visit `http://localhost:5173` to use the simulator.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## 🎯 Quick Start
 
-**Use GitHub Codespaces**
+1. **CPU Scheduling**: Select algorithm → Add processes → Run simulation → View Gantt chart
+2. **Memory Management**: Choose allocation strategy → Allocate/Deallocate memory → Monitor fragmentation
+3. **File System**: Create files/folders → Navigate directories → Manage operations
+4. **Disk Scheduling**: Select algorithm → Add cylinder requests → Run simulation → View seek sequence
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## 🧪 Implemented Algorithms
 
-## What technologies are used for this project?
+### CPU Scheduling
+- **FCFS**: Processes executed in order of arrival
+- **SJF**: Shortest job first (minimizes average waiting time)
+- **Priority**: Higher priority processes execute first
+- **Round Robin**: Time-sharing with fixed quantum
 
-This project is built with:
+### Memory Allocation
+- **First Fit**: First available block
+- **Best Fit**: Smallest sufficient block
+- **Worst Fit**: Largest available block
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### Disk Scheduling
+- **FCFS**: Order of arrival
+- **SSTF**: Nearest request first
+- **SCAN**: Elevator algorithm
+- **LOOK**: SCAN without going to end
 
-## How can I deploy this project?
+---
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Built with ❤️ for OS learners everywhere

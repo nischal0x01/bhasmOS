@@ -5,7 +5,7 @@ export function fcfsDisk(requests: DiskRequest[], headPosition: number): DiskSch
   const seekOperations: { from: number; to: number; seek: number }[] = [];
   let totalSeekTime = 0;
   let currentPosition = headPosition;
-  
+
   requests.forEach(request => {
     const seek = Math.abs(request.cylinder - currentPosition);
     seekOperations.push({
@@ -17,7 +17,7 @@ export function fcfsDisk(requests: DiskRequest[], headPosition: number): DiskSch
     sequence.push(request.cylinder);
     currentPosition = request.cylinder;
   });
-  
+
   return { sequence, totalSeekTime, seekOperations };
 }
 
@@ -27,12 +27,12 @@ export function sstfDisk(requests: DiskRequest[], headPosition: number): DiskSch
   const seekOperations: { from: number; to: number; seek: number }[] = [];
   let totalSeekTime = 0;
   let currentPosition = headPosition;
-  
+
   while (remaining.length > 0) {
     // Find closest request
     let minSeek = Infinity;
     let closestIndex = 0;
-    
+
     remaining.forEach((request, index) => {
       const seek = Math.abs(request.cylinder - currentPosition);
       if (seek < minSeek) {
@@ -40,22 +40,22 @@ export function sstfDisk(requests: DiskRequest[], headPosition: number): DiskSch
         closestIndex = index;
       }
     });
-    
+
     const nextRequest = remaining[closestIndex];
     const seek = Math.abs(nextRequest.cylinder - currentPosition);
-    
+
     seekOperations.push({
       from: currentPosition,
       to: nextRequest.cylinder,
       seek,
     });
-    
+
     totalSeekTime += seek;
     sequence.push(nextRequest.cylinder);
     currentPosition = nextRequest.cylinder;
     remaining.splice(closestIndex, 1);
   }
-  
+
   return { sequence, totalSeekTime, seekOperations };
 }
 
@@ -69,11 +69,11 @@ export function scanDisk(
   const seekOperations: { from: number; to: number; seek: number }[] = [];
   let totalSeekTime = 0;
   let currentPosition = headPosition;
-  
+
   const cylinders = requests.map(r => r.cylinder);
   const left = cylinders.filter(c => c < headPosition).sort((a, b) => b - a);
   const right = cylinders.filter(c => c >= headPosition).sort((a, b) => a - b);
-  
+
   const processDirection = (positions: number[]) => {
     positions.forEach(cylinder => {
       const seek = Math.abs(cylinder - currentPosition);
@@ -87,11 +87,11 @@ export function scanDisk(
       currentPosition = cylinder;
     });
   };
-  
+
   if (direction === 'right') {
     // Go right first, then go to max, then left
     processDirection(right);
-    
+
     if (left.length > 0) {
       // Go to end
       if (currentPosition !== maxCylinder) {
@@ -110,7 +110,7 @@ export function scanDisk(
   } else {
     // Go left first, then go to 0, then right
     processDirection(left);
-    
+
     if (right.length > 0) {
       // Go to start
       if (currentPosition !== 0) {
@@ -127,7 +127,7 @@ export function scanDisk(
       processDirection(right.sort((a, b) => a - b));
     }
   }
-  
+
   return { sequence, totalSeekTime, seekOperations };
 }
 
@@ -140,11 +140,11 @@ export function lookDisk(
   const seekOperations: { from: number; to: number; seek: number }[] = [];
   let totalSeekTime = 0;
   let currentPosition = headPosition;
-  
+
   const cylinders = requests.map(r => r.cylinder);
   const left = cylinders.filter(c => c < headPosition).sort((a, b) => b - a);
   const right = cylinders.filter(c => c >= headPosition).sort((a, b) => a - b);
-  
+
   const processDirection = (positions: number[]) => {
     positions.forEach(cylinder => {
       const seek = Math.abs(cylinder - currentPosition);
@@ -158,7 +158,7 @@ export function lookDisk(
       currentPosition = cylinder;
     });
   };
-  
+
   if (direction === 'right') {
     processDirection(right);
     processDirection(left);
@@ -166,7 +166,7 @@ export function lookDisk(
     processDirection(left);
     processDirection(right.sort((a, b) => a - b));
   }
-  
+
   return { sequence, totalSeekTime, seekOperations };
 }
 
