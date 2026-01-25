@@ -70,7 +70,7 @@ export function MemoryManager() {
 
     const { blocks: newBlocks, result } = deallocateMemory(blocks, deallocateName.trim());
     setBlocks(newBlocks);
-    
+
     if (result.success) {
       toast.success(result.message);
       setDeallocateName('');
@@ -86,8 +86,9 @@ export function MemoryManager() {
       return;
     }
 
+    const maxId = blocks.length > 0 ? Math.max(...blocks.map(b => b.id)) : -1;
     const newBlock: MemoryBlock = {
-      id: blocks.length,
+      id: maxId + 1,
       size,
       allocated: false,
     };
