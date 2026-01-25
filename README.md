@@ -5,6 +5,8 @@ An interactive web-based operating system simulator for learning and visualizing
 ![React](https://img.shields.io/badge/React-18.3-61DAFB?style=flat-square&logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6?style=flat-square&logo=typescript)
 
+🚀 **[Live Demo](https://bhasmos.onrender.com/)**
+
 ## � Developers
 
 Developed by fifth semester students of **Kathmandu University**:
@@ -54,7 +56,7 @@ Developed by fifth semester students of **Kathmandu University**:
 
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/nischal0x01/bhasmOS.git
 cd bhasmOS
 
 # Install dependencies
@@ -94,4 +96,4 @@ Visit `http://localhost:5173` to use the simulator.
 
 ---
 
-Built with ❤️ for OS learners everywhere
+
