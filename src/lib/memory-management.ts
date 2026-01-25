@@ -24,7 +24,7 @@ export function allocateMemory(
       );
       break;
       
-    case 'best-fit':
+    case 'best-fit': {
       let minWaste = Infinity;
       newBlocks.forEach((block, index) => {
         if (!block.allocated && block.size >= processSize) {
@@ -36,8 +36,9 @@ export function allocateMemory(
         }
       });
       break;
+    }
       
-    case 'worst-fit':
+    case 'worst-fit': {
       let maxWaste = -1;
       newBlocks.forEach((block, index) => {
         if (!block.allocated && block.size >= processSize) {
@@ -49,6 +50,7 @@ export function allocateMemory(
         }
       });
       break;
+    }
   }
   
   if (selectedBlockIndex === -1) {
